@@ -96,7 +96,7 @@ func init() {
 			if err != nil {
 				return nil, err
 			}
-			second, err := dcgBody(args[1], list, rest, env)
+			second, err := dcgBody(args[1], v, rest, env)
 			if err != nil {
 				return nil, err
 			}
@@ -104,7 +104,7 @@ func init() {
 		},
 		{name: atomSemiColon, arity: 2}: func(args []Term, list, rest Term, env *Env) (Term, error) {
 			body := dcgBody
-			if t, ok := env.Resolve(args[1]).(Compound); ok && t.Functor() == atomThen && t.Arity() == 2 {
+			if t, ok := env.Resolve(args[0]).(Compound); ok && t.Functor() == atomThen && t.Arity() == 2 {
 				body = dcgCBody
 			}
 			either, err := body(args[0], list, rest, env)
@@ -141,7 +141,8 @@ func init() {
 			return atomComma.Apply(atomCut, atomEqual.Apply(list, rest)), nil
 		},
 		{name: atomNegation, arity: 1}: func(args []Term, list, rest Term, env *Env) (Term, error) {
-			g, err := dcgBody(args[0], list, rest, env)
+			v := NewVariable()
+			g, err := dcgBody(args[0], list, v, env)
 			if err != nil {
 				return nil, err
 			}
