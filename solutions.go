@@ -63,7 +63,7 @@ func (s *Solutions) Scan(dest interface{}) error {
 		for i := 0; i < t.NumField(); i++ {
 			f := t.Field(i)
 			name := f.Name
-			if alias, ok := f.Tag.Lookup("prolog"); !ok {
+			if alias, ok := f.Tag.Lookup("prolog"); ok {
 				name = alias
 			}
 			fields[name] = o.Field(i).Addr().Interface()
@@ -77,13 +77,13 @@ func (s *Solutions) Scan(dest interface{}) error {
 			}
 
 			if err := convertAssign(f, s.vm, v.Variable, s.env); err != nil {
-				continue
+				return err
 			}
 		}
 		return nil
 	case reflect.Map:
 		t := o.Type()
-		if t.Key() == reflect.TypeOf("") {
+		if t.Key() != reflect.TypeOf("") {
 			return errors.New("map key is not string")
 		}
 
